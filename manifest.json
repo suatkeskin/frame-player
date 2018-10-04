@@ -1,0 +1,10 @@
+{
+  "short_name": "Frame Player",
+  "name": "Frame Player",
+  "description": "A simple frame player app.",
+  "background_color": "#ffffff",
+  "display": "minimal-ui",
+  "orientation": "landscape",
+  "theme_color": "#155c8e",
+  "start_url": "index.html?launcher=true"
+}
