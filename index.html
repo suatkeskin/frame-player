@@ -90,7 +90,6 @@
 	player.on('downloadcomplete', function (e) {
 		console.log('download completed in ' + e.data.time);
 		let imageNumber = e.data.imageNumber;
-		console.log("image number is " + imageNumber);
 		let canvas = document.getElementById("img-" + imageNumber);
 		let context = canvas.getContext('2d');
 		context.drawImage(e.data.img, 0, 0, 128, 72, 0, 0, 128, 72);

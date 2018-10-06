@@ -1,5 +1,4 @@
 @charset "utf-8";
-
 html {
     height: 100%;
 }
@@ -129,7 +128,7 @@ header, footer, section, div {
     -webkit-font-smoothing: antialiased;
 }
 
-.fp-top-app-bar__action-item, .fp-top-app-bar__navigation-icon {
+.fp-top-app-bar__navigation-icon {
     --mdc-ripple-fg-size: 0;
     --mdc-ripple-left: 0;
     --mdc-ripple-top: 0;
@@ -285,46 +284,8 @@ svg:not(:root) {
     margin-right: auto;
 }
 
-.player-tooltip {
-    background: rgba(255, 255, 255, .9);
-    border-radius: 3px;
-    bottom: 100%;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
-    color: #4f5b5f;
-    font-size: 12px;
-    font-weight: 500;
-    left: 50%;
-    line-height: 1.3;
-    margin-bottom: 10px;
-    opacity: 0;
-    padding: 5px 7.5px;
-    pointer-events: none;
-    position: absolute;
-    transform: translate(-50%, 10px) scale(.8);
-    transform-origin: 50% 100%;
-    transition: transform .2s .1s ease, opacity .2s .1s ease;
-    white-space: nowrap;
-    z-index: 2;
-}
-
-.player-controls > .player-control:first-child .player-tooltip--visible, .player-controls > .player-control:first-child + .player-control .player-tooltip--visible, .player-controls > .player-control:first-child + .player-control.plyr__tab-focus .player-tooltip, .player-controls > .player-control:first-child + .player-control:hover .player-tooltip, .player-controls > .player-control:first-child.plyr__tab-focus .player-tooltip, .player-controls > .player-control:first-child:hover .player-tooltip, .player-controls > .player-control:last-child .player-tooltip--visible, .player-controls > .player-control:last-child.plyr__tab-focus .player-tooltip, .player-controls > .player-control:last-child:hover .player-tooltip {
-    transform: translate(0, 0) scale(1);
-}
-
 .player-control.player-control--pressed .icon--not-pressed, .player-control.player-control--pressed .label--not-pressed, .player-control:not(.player-control--pressed) .icon--pressed, .player-control:not(.player-control--pressed) .label--pressed {
     display: none;
-}
-
-.player-controls > .player-control:first-child .player-tooltip, .player-controls > .player-control:first-child + .player-control .player-tooltip {
-    left: 0;
-    transform: translate(0, 10px) scale(.8);
-    transform-origin: 0 100%;
-}
-
-.player-controls > .player-control:first-child .plyr__tooltip, .player-controls > .player-control:first-child + .player-control .player-tooltip {
-    left: 0;
-    transform: translate(0, 10px) scale(.8);
-    transform-origin: 0 100%;
 }
 
 .player-progress {
@@ -348,7 +309,7 @@ input[type=range] {
     width: 100%;
 }
 
-.player-progress input[type=range], .player-progress-buffer {
+.player-progress input[type=range] {
     margin-left: -7px;
     margin-right: -7px;
     width: calc(100% + 14px);
@@ -357,24 +318,6 @@ input[type=range] {
 .player-progress input[type=range] {
     position: relative;
     z-index: 2;
-}
-
-.player-progress-buffer {
-    margin-left: -7px;
-    margin-right: -7px;
-    width: calc(100% + 14px);
-    -webkit-appearance: none;
-    background: 0 0;
-    border: 0;
-    border-radius: 100px;
-    height: 6px;
-    left: 0;
-    margin-top: -3px;
-    padding: 0;
-    position: absolute;
-    top: 50%;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .15);
-    color: rgba(255, 255, 255, .25);
 }
 
 .player-video-wrapper {
@@ -402,7 +345,6 @@ input[type=range] {
 }
 
 .player-control.player-tab-focus {
-    /*box-shadow: 0 0 0 5px rgba(26, 175, 255, .5);*/
     outline: 0;
 }
 
@@ -418,16 +360,6 @@ input[type=range] {
 .player--playing .player-control--overlaid {
     opacity: 0;
     visibility: hidden;
-}
-
-.player-sr-only {
-    clip: rect(1px, 1px, 1px, 1px);
-    overflow: hidden;
-    border: 0 !important;
-    height: 1px !important;
-    padding: 0 !important;
-    position: absolute !important;
-    width: 1px !important;
 }
 
 @media screen and (min-width: 480px) {
