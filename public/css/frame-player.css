@@ -44,7 +44,6 @@ header, footer, section, div {
 }
 
 .fp-typography--overline {
-    font-size: .75rem;
     line-height: 2rem;
     font-weight: 500;
     letter-spacing: .16667em;
@@ -174,27 +173,20 @@ header, footer, section, div {
 main {
     min-height: 100%;
     min-width: 300px;
-    padding-bottom: 120px;
-}
-
-.player-container {
-    padding: 32px;
-    max-width: 100%;
-    width: 100%;
+    display: flex;
     margin-left: auto;
     margin-right: auto;
+}
+
+.player-container, .iamage-container {
+    padding: 32px;
 }
 
 .player {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-    direction: ltr;
-    font-family: inherit;
-    font-variant-numeric: tabular-nums;
-    font-weight: 500;
-    line-height: 1.7;
-    max-width: 100%;
-    min-width: 200px;
+    width: 640px;
+    height: 360px;
     position: relative;
     text-shadow: none;
     transition: box-shadow .3s ease;
@@ -203,11 +195,12 @@ main {
     margin: 20px auto;
 }
 
-.player-controls {
-    align-items: center;
-    display: flex;
-    justify-content: flex-end;
-    text-align: center;
+.player--video {
+    background: #000;
+    overflow: hidden;
+}
+
+.player--video .player-controls {
     background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .7));
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
@@ -219,6 +212,13 @@ main {
     right: 0;
     transition: opacity .4s ease-in-out, transform .4s ease-in-out;
     z-index: 3;
+}
+
+.player-controls {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
 }
 
 .player-control {
@@ -234,6 +234,21 @@ main {
     transition: all .3s ease;
 }
 
+.player-control--overlaid {
+    background: rgba(26, 175, 255, .8);
+    border: 0;
+    border-radius: 100%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .15);
+    color: #fff;
+    display: none;
+    left: 50%;
+    padding: 15px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
 .player button {
     font: inherit;
     line-height: inherit;
@@ -244,16 +259,25 @@ main {
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .15));
 }
 
+svg:not(:root) {
+    overflow: hidden;
+}
+
 .player-control svg {
     display: block;
     fill: currentColor;
-    height: 18px;
     pointer-events: none;
-    width: 18px;
+    height: 32px;
+    width: 32px;
 }
 
-svg:not(:root) {
-    overflow: hidden;
+#main-play svg {
+    height: 64px;
+    width: 64px;
+}
+
+.player--video .player-control svg {
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .15));
 }
 
 .player-controls > .player-control:first-child, .player-controls > .player-control:first-child + [data-plyr=pause] {
@@ -283,11 +307,21 @@ svg:not(:root) {
     z-index: 2;
 }
 
+.player-controls > .player-control:first-child .player-tooltip--visible, .player-controls > .player-control:first-child + .player-control .player-tooltip--visible, .player-controls > .player-control:first-child + .player-control.plyr__tab-focus .player-tooltip, .player-controls > .player-control:first-child + .player-control:hover .player-tooltip, .player-controls > .player-control:first-child.plyr__tab-focus .player-tooltip, .player-controls > .player-control:first-child:hover .player-tooltip, .player-controls > .player-control:last-child .player-tooltip--visible, .player-controls > .player-control:last-child.plyr__tab-focus .player-tooltip, .player-controls > .player-control:last-child:hover .player-tooltip {
+    transform: translate(0, 0) scale(1);
+}
+
 .player-control.player-control--pressed .icon--not-pressed, .player-control.player-control--pressed .label--not-pressed, .player-control:not(.player-control--pressed) .icon--pressed, .player-control:not(.player-control--pressed) .label--pressed {
     display: none;
 }
 
-.player-controls > .player-control:first-child .plyr__tooltip, .player-controls > .player-control:first-child + .player-control .plyr__tooltip {
+.player-controls > .player-control:first-child .player-tooltip, .player-controls > .player-control:first-child + .player-control .player-tooltip {
+    left: 0;
+    transform: translate(0, 10px) scale(.8);
+    transform-origin: 0 100%;
+}
+
+.player-controls > .player-control:first-child .plyr__tooltip, .player-controls > .player-control:first-child + .player-control .player-tooltip {
     left: 0;
     transform: translate(0, 10px) scale(.8);
     transform-origin: 0 100%;
@@ -351,9 +385,94 @@ input[type=range] {
     z-index: 0;
 }
 
-.player canvas {
+.player-container canvas {
+    cursor: pointer;
+}
+
+.player-time {
+    font-size: 11px;
+}
+
+.player-controls .player-progress, .player-controls .player-time, .player-controls > .player-control {
+    margin-left: 5px;
+}
+
+[type=reset], [type=submit], button, html [type=button] {
+    -webkit-appearance: button;
+}
+
+.player-control.player-tab-focus {
+    /*box-shadow: 0 0 0 5px rgba(26, 175, 255, .5);*/
+    outline: 0;
+}
+
+.player--video .player-control.player-tab-focus, .player--video .player-control:hover, .player--video .player-control[aria-expanded=true] {
+    background: #1aafff;
+    color: #fff;
+}
+
+.player--video .player-control--overlaid {
+    display: block;
+}
+
+.player--playing .player-control--overlaid {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.player-sr-only {
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+    border: 0 !important;
+    height: 1px !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+}
+
+@media screen and (min-width: 480px) {
+    .player--video .player-controls {
+        padding: 35px 10px 10px;
+    }
+
+    .player-controls .player-progress, .player-controls .player-time, .player-controls > .player-control {
+        margin-left: 10px;
+    }
+}
+
+.player-progress {
     width: 100%;
-    height: 100%;
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: #1aafff;
+    color: white;
+}
+
+ul {
+    list-style-type: none;
+}
+
+h3 {
+    font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+}
+
+li img {
+    float: left;
+    margin: 0 15px 0 0;
+}
+
+li {
+    padding: 10px;
+    overflow: auto;
+}
+
+li:hover {
+    background: #eee;
+    cursor: pointer;
 }
 
 @media screen and (min-width: 900px) {
@@ -371,7 +490,7 @@ input[type=range] {
         line-height: 3.75rem;
     }
 
-    .player-container {
+    main {
         width: 1200px;
     }
 }
