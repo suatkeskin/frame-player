@@ -8,15 +8,63 @@ let FramePlayer = function (el) {
 	this.paused = true;
 	this.images = [];
 	this.img = undefined;
+	this.playerMaxWidth = 640;
+	this.playerMaxHeight = 360;
 	this.canvas = document.createElement('canvas');
-	this.canvas.width = 640;
-	this.canvas.height = 360;
+	this.canvas.width = this.getVideoCanvasWidth();
+	this.canvas.height = this.getVideoCanvasHeight();
 	this.context = this.canvas.getContext('2d');
 	this.playerContainer.appendChild(this.canvas);
 	this.requestId = undefined;
 	const player = this;
 	this.canvas.addEventListener('click', function () {
 		player.play();
+	}, false);
+	this.on('downloadcomplete', function (e) {
+		console.log('download completed in ' + e.data.time);
+		const imageNumber = e.data.imageNumber;
+		const playListItemCanvas = document.createElement("canvas");
+		playListItemCanvas.width = player.getPlayerListItemCanvasWidth();
+		playListItemCanvas.height = player.getPlayerListItemCanvasHeight();
+		playListItemCanvas.addEventListener('click', function () {
+			player.img = player.images[imageNumber];
+			player.pauseAndSeek(0);
+		}, false);
+		const context = playListItemCanvas.getContext('2d');
+		context.drawImage(e.data.img, 0, 0, 128, 72, 0, 0, playListItemCanvas.width, playListItemCanvas.height);
+
+		const playListItem = document.createElement("li");
+		playListItem.appendChild(playListItemCanvas);
+
+		let playList = document.getElementById("play-list");
+		if (!playList) {
+			playList = document.createElement("ul");
+			playList.id = "play-list";
+			const playlistContainer = document.getElementById("playlist-container");
+			playlistContainer.appendChild(playList);
+		}
+		playList.appendChild(playListItem);
+	});
+	this.on('play', function (ms) {
+		console.log('video is playing now, current milliseconds is ' + ms.data);
+	});
+	this.on('pause', function (ms) {
+		console.log('video is paused, current milliseconds is ' + ms.data);
+	});
+	this.on('end', function () {
+		console.log('video is completed');
+	});
+	window.addEventListener("resize", function () {
+		player.canvas.width = player.getVideoCanvasWidth();
+		player.canvas.height = player.getVideoCanvasHeight();
+		const playListItemCanvases = document.querySelectorAll("#play-list li canvas");
+		for (let i = 0; i < playListItemCanvases.length; i++) {
+			const playListItemCanvas = playListItemCanvases[i];
+			playListItemCanvas.width = player.getPlayerListItemCanvasWidth();
+			playListItemCanvas.height = player.getPlayerListItemCanvasHeight();
+			const context = playListItemCanvas.getContext('2d');
+			context.drawImage(player.images[i], 0, 0, 128, 72, 0, 0, playListItemCanvas.width, playListItemCanvas.height);
+		}
 	}, false);
 };
 
@@ -87,13 +135,15 @@ FramePlayer.prototype.drawFrame = function (currentFrame) {
 			sy += 72;
 		}
 	}
+
 	var progressBar = document.getElementById("progress-bar");
 	var currentTime = document.getElementById("current-time");
 	let curTime = ((this.currentFrame + 1) * 0.1).toFixed(2);
 	progressBar.style.width = ((this.currentFrame + 1) * 4) + '%';
 	currentTime.innerHTML = curTime;
+
 	player.currentTime = 1000 * curTime;
-	player.context.drawImage(player.img, sx, sy, 128, 72, 0, 0, 640, 360);
+	player.context.drawImage(player.img, sx, sy, 128, 72, 0, 0, player.canvas.width, player.canvas.height);
 };
 
 FramePlayer.prototype.loadImages = function () {
@@ -138,5 +188,42 @@ FramePlayer.prototype.triggerEvent = function (eventName, data) {
 		this.playerContainer.dispatchEvent(event);
 	} else {
 		this.playerContainer.fireEvent("on" + event.eventType, event);
+	}
+};
+
+FramePlayer.prototype.getVideoCanvasWidth = function () {
+	const viewPortWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	if (viewPortWidth < 800) {
+		return this.playerMaxWidth / 5 * 3;
+	} else if (viewPortWidth < 1350) {
+		return this.playerMaxWidth / 5 * 4;
+	} else {
+		return this.playerMaxWidth;
+	}
+};
+
+FramePlayer.prototype.getVideoCanvasHeight = function () {
+	return this.playerMaxHeight / (this.playerMaxWidth / this.canvas.width)
+};
+
+FramePlayer.prototype.getPlayerListItemCanvasWidth = function () {
+	const viewPortWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	if (viewPortWidth < 800) {
+		return this.playerMaxWidth / 15 * 3;
+	} else if (viewPortWidth < 1350) {
+		return this.playerMaxWidth / 15 * 4;
+	} else {
+		return this.playerMaxWidth / 15 * 5;
+	}
+};
+
+FramePlayer.prototype.getPlayerListItemCanvasHeight = function () {
+	const viewPortWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	if (viewPortWidth < 800) {
+		return this.playerMaxHeight / 15 * 3;
+	} else if (viewPortWidth < 1350) {
+		return this.playerMaxHeight / 15 * 4;
+	} else {
+		return this.playerMaxHeight / 15 * 5;
 	}
 };

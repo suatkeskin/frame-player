@@ -21,92 +21,48 @@
                     <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
                 </svg>
             </a>
-            <h1 class="mdc-typography--headline1">Frame Player</h1>
+            <h1 class="fp-typography--headline1">Frame Player</h1>
         </section>
     </div>
 </header>
 
 <main class="fp-top-app-bar--fixed-adjust">
-
-    <div class="iamage-container">
-        <ul>
-            <li>
-                <canvas id="img-0" width="120" height="72"></canvas>
-            </li>
-            <li>
-                <canvas id="img-1" width="120" height="72"></canvas>
-            </li>
-            <li>
-                <canvas id="img-2" width="120" height="72"></canvas>
-            </li>
-            <li>
-                <canvas id="img-3" width="120" height="72"></canvas>
-            </li>
-            <li>
-                <canvas id="img-4" width="120" height="72"></canvas>
-            </li>
-            <li>
-                <canvas id="img-5" width="120" height="72"></canvas>
-            </li>
-            <li>
-                <canvas id="img-6" width="120" height="72"></canvas>
-            </li>
-        </ul>
-    </div>
-
     <div class="player-container">
-        <div id="player" class="player player--video">
-            <div class="player-controls">
-                <button id="bottom-play" type="button" class="player-control" data-plyr="play" aria-label="Play">
-                    <svg class="icon--pressed" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        <div class="fp-container">
+            <div id="player" class="player player--video">
+                <div class="player-controls">
+                    <button id="bottom-play" type="button" class="player-control" data-plyr="play" aria-label="Play">
+                        <svg class="icon--pressed" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                        <svg class="icon--not-pressed" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                    </button>
+                    <div id="player-progress" class="player-progress">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                    <div id="current-time" class="player-time player-time--current" aria-label="Current time">0.00</div>
+                </div>
+                <div id="video-container" class="player-video-wrapper">
+                </div>
+                <button id="main-play" type="button" class="player-control player-control--overlaid player-tab-focus" data-plyr="play" aria-label="Play">
+                    <svg role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>
-                    <svg class="icon--not-pressed" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
                     </svg>
                 </button>
-                <div id="player-progress" class="player-progress">
-                    <div id="progress-bar" class="progress-bar"></div>
-                </div>
-                <div id="current-time" class="player-time player-time--current" aria-label="Current time">0.00</div>
             </div>
-            <div id="video-container" class="player-video-wrapper">
-            </div>
-            <button id="main-play" type="button" class="player-control player-control--overlaid player-tab-focus" data-plyr="play" aria-label="Play">
-                <svg role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                </svg>
-            </button>
+        </div>
+        <div id="playlist-container" class="pl-container">
         </div>
     </div>
-
 </main>
 <script src="public/js/frame-player.js" charset="utf-8"></script>
 <script>
 	var player = new FramePlayer('video-container');
-	player.on('downloadcomplete', function (e) {
-		console.log('download completed in ' + e.data.time);
-		let imageNumber = e.data.imageNumber;
-		let canvas = document.getElementById("img-" + imageNumber);
-		let context = canvas.getContext('2d');
-		context.drawImage(e.data.img, 0, 0, 128, 72, 0, 0, 128, 72);
-		canvas.addEventListener('click', function () {
-			player.img = player.images[imageNumber];
-			player.pauseAndSeek(0);
-		}, false);
-	});
-	player.on('play', function (ms) {
-		console.log('video is playing now, current milliseconds is ' + ms.data);
-	});
-	player.on('pause', function (ms) {
-		console.log('video is paused, current milliseconds is ' + ms.data);
-	});
-	player.on('end', function () {
-		console.log('video is completed');
-	});
 	player.loadImages();
 
 	(function () {
